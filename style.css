@@ -1,0 +1,188 @@
+:root {
+    --dark-navy: #020c1b;
+    --light-navy: #0a192f;
+    --cyan-glow: #64ffda;
+    --text-light: #ccd6f6;
+    --text-muted: #8892b0;
+    --font-sans: 'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: var(--dark-navy);
+    color: var(--text-light);
+    font-family: var(--font-sans);
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+}
+
+section {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 2rem;
+    scroll-snap-align: start;
+    position: relative; /* Important for child positioning */
+    overflow: hidden; /* Prevents bleed-over */
+}
+
+/* Banner Section */
+.banner {
+    /* position: relative; is inherited */
+}
+
+/* CORRECTED: #particles-js is now contained within the banner */
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0; /* Sits behind the banner content */
+}
+
+/* Banner content must have a higher z-index to appear above the particles */
+.main-headline, .sub-headline, .scroll-indicator {
+    position: relative;
+    z-index: 1;
+}
+
+.main-headline {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: -2px;
+}
+.sub-headline {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.6;
+    font-weight: 300;
+}
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    color: var(--cyan-glow);
+    animation: bounce 2s infinite;
+    cursor: pointer;
+    text-decoration: none;
+}
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+/* Contact Section */
+.contact-section { background: linear-gradient(180deg, var(--dark-navy) 0%, #000 100%); }
+.form-container {
+    position: relative; /* Ensure it appears above the section's pseudo-elements if any */
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+    background: rgba(10, 25, 47, 0.3);
+    backdrop-filter: blur(15px) saturate(120%);
+    -webkit-backdrop-filter: blur(15px) saturate(120%);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    display: flex;
+    overflow: hidden;
+}
+.form-content {
+    flex: 2;
+    padding: 3rem;
+    text-align: left;
+}
+.form-content h2 {
+    font-size: 2rem;
+    color: #fff;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+.form-content p { color: var(--text-muted); margin-bottom: 2rem; }
+
+/* Form Styles */
+.input-group { position: relative; }
+.input-group input {
+    width: 100%;
+    padding: 14px 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--text-muted);
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+.input-group label {
+    position: absolute;
+    left: 10px;
+    top: 14px;
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+.input-group input:focus + label, .input-group input:valid + label {
+    top: -10px;
+    font-size: 0.8rem;
+    color: var(--cyan-glow);
+}
+.input-group input:focus { outline: none; border-bottom-color: var(--cyan-glow); }
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--cyan-glow);
+    background: transparent;
+    color: var(--cyan-glow);
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.submit-btn:hover { background: rgba(100, 255, 218, 0.1); box-shadow: 0 0 20px rgba(100, 255, 218, 0.2); }
+
+/* Data Visualization */
+.data-visualization {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 250px;
+}
+#synaptic-web {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+}
+
+footer { margin-top: 2rem; font-size: 0.8rem; color: var(--text-muted); }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-container { flex-direction: column; }
+    .data-visualization {
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        min-height: 300px;
+        padding: 2rem;
+    }
+    .form-content { text-align: center; }
+}

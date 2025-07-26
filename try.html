@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dscrutiny - Coming Soon</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="content">
+        <!-- The banner section now contains its own background animation -->
+        <section class="banner">
+            <div id="particles-js"></div>
+            <h1 class="main-headline">Insights in Progress.</h1>
+            <p class="sub-headline">
+                We are building a more intuitive platform to transform your data into decisions.
+                <br>A new era of analytics is on the horizon.
+            </p>
+            <a href="#contact" class="scroll-indicator" aria-label="Scroll to contact form">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+            </a>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="form-container">
+                <div class="form-content">
+                    <h2>Be the First to Know</h2>
+                    <p>Leave your details below to receive an exclusive notification when we go live.</p>
+                    <form id="contact-form">
+                        <div class="input-group">
+                            <input type="email" id="email" name="email" required>
+                            <label for="email">Email Address</label>
+                        </div>
+                        <button type="submit" class="submit-btn">Request Notification</button>
+                    </form>
+                </div>
+                <div class="data-visualization">
+                    <canvas id="synaptic-web"></canvas>
+                </div>
+            </div>
+            <footer>
+                <p>© 2025 Dscrutiny All Rights Reserved.</p>
+            </footer>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
