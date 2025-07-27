@@ -74,7 +74,7 @@ section {
 }
 .scroll-indicator {
     position: absolute;
-    bottom: 40px;
+    bottom: 60px;
     color: var(--cyan-glow);
     animation: bounce 2s infinite;
     cursor: pointer;
