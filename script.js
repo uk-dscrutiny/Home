@@ -39,7 +39,7 @@ const form = document.getElementById("contact-form");
 const submitBtn = form.querySelector(".submit-btn");
 
 // !!! IMPORTANT: Paste the Web App URL you copied in Part 1 here !!!
-const googleScriptURL = "https://script.google.com/macros/s/AKfycbxB-2QYHGg-w19jmjYnShdk6BiaIIaQG0p_4M-m53su2NSMlDjNDnnSkYo6VaTXMONp/exec";
+const googleScriptURL = "https://script.google.com/macros/s/AKfycbztNBDl7pvw09XO0KF_-wv0muSQNuA_awpX9AOP6Aizxj9ifTn-S7BzXTl9VWRxqvo/exec";
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
