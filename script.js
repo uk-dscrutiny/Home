@@ -1,165 +1,150 @@
-// --- Particles.js Initialization for the banner ---
-particlesJS("particles-js", {
-  particles: {
-    number: { value: 80, density: { enable: true, value_area: 800 } },
-    color: { value: "#8892b0" },
-    shape: { type: "circle" },
-    opacity: { value: 0.5, random: false },
-    size: { value: 3, random: true },
-    line_linked: {
-      enable: true,
-      distance: 150,
-      color: "#8892b0",
-      opacity: 0.4,
-      width: 1,
-    },
-    move: {
-      enable: true,
-      speed: 1,
-      direction: "none",
-      random: false,
-      straight: false,
-      out_mode: "out",
-    },
-  },
-  interactivity: {
-    detect_on: "canvas",
-    events: {
-      onhover: { enable: true, mode: "grab" },
-      onclick: { enable: false },
-      resize: true,
-    },
-    modes: { grab: { distance: 140, line_linked: { opacity: 1 } } },
-  },
-  retina_detect: true,
-});
+// script.js | Project Singularity: The Final Cut
 
-// --- REAL Form Submission Logic ---
-const form = document.getElementById("contact-form");
-const submitBtn = form.querySelector(".submit-btn");
+document.addEventListener('DOMContentLoaded', () => {
 
-// !!! IMPORTANT: Paste the Web App URL you copied in Part 1 here !!!
-const googleScriptURL = "https://script.google.com/macros/s/AKfycbyx_xiC4HvA2PxG2AjnTPlVMSOe_L5mbR9pwfx81aOkbjDgDrsMXaAp4CVroG1McOhy/exec";
+    // --- 1. Custom Interactive Cursor (Hybrid Mode) ---
+    const spotlight = document.querySelector('.cursor-spotlight');
+    const cursorDot = document.querySelector('.cursor-dot');
+    
+    // Only run this on non-touch devices
+    if (window.matchMedia('(pointer: fine)').matches) {
+        window.addEventListener('mousemove', e => {
+            spotlight.style.top = e.pageY + 'px';
+            spotlight.style.left = e.pageX + 'px';
+            cursorDot.style.top = e.pageY + 'px';
+            cursorDot.style.left = e.pageX + 'px';
+        });
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  submitBtn.innerText = "Transmitting...";
-  submitBtn.disabled = true;
+        const interactiveElements = document.querySelectorAll('a, button');
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
+        });
+    }
 
-  const userEmail = document.getElementById("email").value;
 
-  fetch(googleScriptURL, {
-    method: "POST",
-    mode: "no-cors", // Important for sending data to Apps Script from a different origin
-    cache: "no-cache",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    // The body needs to be a stringified version of the data
-    body: JSON.stringify({ email: userEmail }),
-  })
-    .then(() => {
-      // Because of no-cors, we can't read the response. We assume success if the request doesn't fail.
-      submitBtn.innerText = "Signal Received ✓";
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      submitBtn.innerText = "Error! Try Again.";
-    })
-    .finally(() => {
-      setTimeout(() => {
-        form.reset();
-        // Ensure the label goes back down
-        document.getElementById("email").blur();
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Request Notification";
-      }, 3000);
-    });
-});
+    // --- 2. Live Particle Canvas Background ---
+    const canvas = document.getElementById('particle-canvas');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let particles = []; let mouse = { x: null, y: null };
+        const resizeCanvas = () => { canvas.width = window.innerWidth; canvas.height = canvas.parentElement.clientHeight; };
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        class Particle { constructor(x, y, size, color) { this.x = x; this.y = y; this.size = size; this.color = color; this.baseX = this.x; this.baseY = this.y; this.density = (Math.random() * 30) + 1; } draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.closePath(); ctx.fill(); } update() { let dx = mouse.x - this.x; let dy = mouse.y - this.y; let distance = Math.sqrt(dx * dx + dy * dy); let forceDirectionX = dx / distance; let forceDirectionY = dy / distance; let maxDistance = 100; let force = (maxDistance - distance) / maxDistance; if (distance < maxDistance) { this.x -= forceDirectionX * force * this.density * 0.1; this.y -= forceDirectionY * force * this.density * 0.1; } else { if (this.x !== this.baseX) { let dx = this.x - this.baseX; this.x -= dx / 10; } if (this.y !== this.baseY) { let dy = this.y - this.baseY; this.y -= dy / 10; } } } }
+        const initParticles = () => { particles = []; let numberOfParticles = window.innerWidth > 768 ? 70 : 25; for (let i = 0; i < numberOfParticles; i++) { let size = (Math.random() * 1.5) + 1; let x = Math.random() * (canvas.width - size * 2); let y = Math.random() * (canvas.height - size * 2); let color = 'rgba(0, 246, 255, 0.7)'; particles.push(new Particle(x, y, size, color)); } };
+        const animateParticles = () => { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); };
+        resizeCanvas(); initParticles(); animateParticles(); window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+    }
 
-// --- The Synaptic Web Canvas Animation ---
-const canvas = document.getElementById("synaptic-web");
-// ... (The rest of the canvas animation code remains exactly the same as the previous version) ...
-const ctx = canvas.getContext("2d");
-let width,
-  height,
-  particles,
-  rotation = 0;
-let mouseX = 0;
-function setup() {
-  if (!canvas) return;
-  width = canvas.offsetWidth;
-  height = canvas.offsetHeight;
-  canvas.width = width;
-  canvas.height = height;
-  particles = [];
-  const particleCount = 200;
-  const sliceAngle = Math.PI * (3 - Math.sqrt(5));
-  for (let i = 0; i < particleCount; i++) {
-    const z = (i / (particleCount - 1)) * 2 - 1;
-    const radius = Math.sqrt(1 - z * z);
-    const angle = sliceAngle * i;
-    particles.push({
-      x: Math.cos(angle) * radius,
-      y: Math.sin(angle) * radius,
-      z: z,
-    });
-  }
-  window.addEventListener("mousemove", (e) => {
-    mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-  });
-}
-function draw() {
-  if (!ctx) return;
-  ctx.clearRect(0, 0, width, height);
-  ctx.save();
-  ctx.translate(width / 2, height / 2);
-  rotation += 0.002 + mouseX * 0.005;
-  const focalLength = 2.5;
-  particles.forEach((p) => {
-    const r_x = p.x * Math.cos(rotation) - p.z * Math.sin(rotation);
-    const r_z = p.x * Math.sin(rotation) + p.z * Math.cos(rotation);
-    const scale = focalLength / (focalLength + r_z);
-    p.projected = {
-      x: r_x * scale * (width / 4),
-      y: p.y * scale * (width / 4),
-      scale: scale,
+    // --- 3. 3D Tilt Effect for Service Cards ---
+    if (window.VanillaTilt) {
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 15, speed: 400, glare: true, "max-glare": 0.2, perspective: 1000 });
+    }
+
+    // --- 4. Mobile Navigation & Scrolled Header ---
+    const nav = document.querySelector('.main-nav');
+    const navToggle = document.querySelector('.mobile-nav-toggle');
+    if (navToggle) { navToggle.addEventListener('click', () => nav.classList.toggle('is-open')); }
+    const header = document.querySelector('.main-header');
+    window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 50); });
+
+    // --- 5. Scroll Animations ---
+    const scrollObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                if (entry.target.classList.contains('stat-number')) {
+                    const counter = entry.target; const target = +counter.getAttribute('data-target'); let current = 0; const increment = target / 100;
+                    const updateCounter = () => { current += increment; if (current < target) { counter.innerText = Math.ceil(current); requestAnimationFrame(updateCounter); } else { counter.innerText = target; } };
+                    updateCounter();
+                }
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.animate-on-scroll, .stat-number').forEach(el => scrollObserver.observe(el));
+
+        // NEW: Specific observer for the timeline animation
+    const timelineObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 }); // Trigger when 50% of the timeline is visible
+
+    const timeline = document.querySelector('.process-timeline-container');
+    if (timeline) {
+        timelineObserver.observe(timeline);
+    }
+
+    // --- 6. DYNAMIC FOOTER INJECTION (Complete with all links) ---
+const footerElement = document.querySelector('.main-footer');
+if (footerElement) {
+    const footerData = {
+        columns: [
+            { 
+                title: "Business Intelligence", 
+                links: [ 
+                    { text: "Analytics Roadmap", href: "/services/analytics-roadmap.html" }, 
+                    { text: "Data Strategy", href: "/services/data-strategy.html" }, 
+                    { text: "Platform Strategy", href: "/services/platform-strategy.html" } 
+                ] 
+            },
+            { 
+                title: "Data Engineering", 
+                links: [ 
+                    { text: "Data Modernization", href: "/services/data-modernization.html" }, 
+                    { text: "Data Foundation", href: "/services/data-foundation.html" }, 
+                    { text: "Data Operations", href: "/services/data-operations.html" } 
+                ] 
+            },
+            { 
+                title: "Web Operations", 
+                links: [ 
+                    { text: "Domain Management", href: "/services/web-operations.html" }, 
+                    { text: "Email Infrastructure", href: "/services/web-operations.html" }, 
+                    { text: "Web Optimization", href: "/services/web-operations.html" }, 
+                    { text: "Web Hosting", href: "/services/web-operations.html" } 
+                ] 
+            },
+            { 
+                title: "Company", 
+                links: [ 
+                    { text: "About Us", href: "/about.html" },
+                    { text: "Contact", href: "/contact.html" }, 
+                    { text: "LinkedIn", href: "https://www.linkedin.com/company/dscrutiny" } 
+                ] 
+            }
+        ],
+        bottom: {
+            copyright: `© ${new Date().getFullYear()} DSCRUTINY TECHNOLOGIES LIMITED. All Rights Reserved.`,
+            social: { 
+                name: "LinkedIn", 
+                href: "https://www.linkedin.com/company/dscrutiny", 
+                icon: '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle>' 
+            }
+        }
     };
-  });
-  ctx.strokeStyle = "rgba(100, 255, 218, 0.2)";
-  ctx.lineWidth = 0.5;
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const p1 = particles[i];
-      const p2 = particles[j];
-      const dx = p1.x - p2.x;
-      const dy = p1.y - p2.y;
-      const dz = p1.z - p2.z;
-      const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-      if (dist < 0.3) {
-        ctx.beginPath();
-        ctx.moveTo(p1.projected.x, p1.projected.y);
-        ctx.lineTo(p2.projected.x, p2.projected.y);
-        ctx.stroke();
-      }
-    }
-  }
-  particles.forEach((p) => {
-    ctx.beginPath();
-    const radius = p.projected.scale * 2;
-    if (radius > 0) {
-      ctx.arc(p.projected.x, p.projected.y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(100, 255, 218, ${p.projected.scale * 0.8})`;
-      ctx.fill();
-    }
-  });
-  ctx.restore();
-  requestAnimationFrame(draw);
+
+    const pathPrefix = window.location.pathname.includes('/services/') ? '..' : '.';
+
+    let footerHTML = '<div class="container"><div class="footer-grid">';
+    footerData.columns.forEach(column => {
+        footerHTML += `<div class="footer-column"><h4>${column.title}</h4><ul>`;
+        column.links.forEach(link => { 
+            const isAbsoluteUrl = link.href.startsWith('http') || link.href.startsWith('https');
+            const linkHref = isAbsoluteUrl ? link.href : `${pathPrefix}${link.href}`;
+            footerHTML += `<li><a href="${linkHref}">${link.text}</a></li>`; 
+        });
+        footerHTML += '</ul></div>';
+    });
+    
+    footerHTML += '</div><div class="footer-bottom">';
+
+    footerHTML += `<p class="footer-copyright">${footerData.bottom.copyright}</p>`;
+    footerElement.innerHTML = footerHTML;
 }
-setup();
-if (canvas) {
-  draw();
-}
-window.addEventListener("resize", setup);
-// --- End of Synaptic Web Canvas Animation ---
-// --- End of Particles.js Initialization ---
+});
+
