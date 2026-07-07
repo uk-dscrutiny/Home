@@ -126,7 +126,6 @@ if (footerElement) {
                     "Thornton Cleveleys, Blackpool.",
                     "United Kingdom FY53FN",
                     "<strong>UK:</strong> +44 74438 89535",
-                    "<strong>IN:</strong> +91 96067 23930"
                 ]
             }
         ],
